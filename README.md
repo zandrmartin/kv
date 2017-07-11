@@ -2,13 +2,13 @@
 
 A simple CLI key:value store.
 
-### Setup
+## Setup
 
 1. `pip install -r requirements.txt`
 2. `alias kv='python3 kv.py`
 3. `fpath=(/path/to/kv $fpath)` to set up zsh tab-completion. (optional)
 
-### Usage
+## Usage
 
     Usage: kv.py [OPTIONS] COMMAND [ARGS]...
 
@@ -23,6 +23,6 @@ A simple CLI key:value store.
     list    List all key:value pairs.
 
 
-### License
+## License
 
 BSD 2-clause

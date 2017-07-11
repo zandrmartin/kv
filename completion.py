@@ -9,8 +9,19 @@ def completion():
 
 @completion.command()
 def list_commands():
-    for cmd in kv.cli.commands.values():
-        click.echo(f'{cmd.name}:{cmd.help}')
+    for c in kv.cli.commands.values():
+        click.echo(f'{c.name}:{c.help}')
+
+
+@completion.command()
+@click.argument('cmd')
+def list_keys(cmd):
+    kv.load_items()
+    if cmd in ['add', 'list']:
+        return
+    else:
+        for k, v in kv.items.items():
+            click.echo(f'{k}:{v}')
 
 
 if __name__ == '__main__':

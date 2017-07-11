@@ -1,3 +1,16 @@
 #compdef kv
-opts=("${(@f)$(~/src/kv/venv/bin/python ~/src/kv/completion.py list_commands)}")
-_describe 'values' opts
+_arguments -C \
+    '(-): :->command' \
+    '(-)*:: :->arg'
+
+case $state in
+    (command)
+        local -a cmds=("${(@f)$(~/src/kv/venv/bin/python ~/src/kv/completion.py list_commands)}")
+        _describe 'arguments' cmds
+        ;;
+    (arg)
+        local cmd="${words[1]}"
+        local -a opts=("${(@f)$(~/src/kv/venv/bin/python ~/src/kv/completion.py list_keys $cmd)}")
+        _describe 'keys' opts
+        ;;
+esac

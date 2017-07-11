@@ -5,7 +5,7 @@ A simple CLI key:value store.
 ## Setup
 
 1. `pip install -r requirements.txt`
-2. `alias kv='python3 kv.py`
+2. `alias kv='python3 kv.py'`
 3. `fpath=(/path/to/kv $fpath)` to set up zsh tab-completion. (optional)
 
 ## Usage

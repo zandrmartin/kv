@@ -1,0 +1,3 @@
+#compdef kv
+opts=("${(@f)$(~/src/kv/venv/bin/python ~/src/kv/completion.py list_commands)}")
+_describe 'values' opts

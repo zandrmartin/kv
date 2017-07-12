@@ -11,6 +11,8 @@ case $state in
     (arg)
         local cmd="${words[1]}"
         local -a opts=("${(@f)$(~/src/kv/venv/bin/python ~/src/kv/completion.py list_keys $cmd)}")
-        _describe 'keys' opts
+        if [[ $opts != "" ]]; then
+            _describe 'keys' opts
+        fi
         ;;
 esac

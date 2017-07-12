@@ -16,10 +16,10 @@ def list_commands():
 @completion.command()
 @click.argument('cmd')
 def list_keys(cmd):
-    kv.load_items()
     if cmd in ['add', 'list']:
         return
     else:
+        kv.load_items()
         for k, v in sorted(kv.items.items(), key=lambda x: x[0]):
             click.echo(f'{k}:{v}')
 

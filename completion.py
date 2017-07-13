@@ -15,8 +15,9 @@ def list_commands():
 
 @completion.command()
 @click.argument('cmd')
-def list_keys(cmd):
-    if cmd in ['add', 'list']:
+@click.argument('args', nargs=-1)
+def complete(cmd, args):
+    if cmd in ['add', 'list'] or (cmd != 'delete' and len(args) == 1):
         return
     else:
         kv.load_items()

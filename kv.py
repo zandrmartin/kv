@@ -61,13 +61,14 @@ def get(key):
 
 
 @cli.command()
-@click.argument('key')
-def delete(key):
-    """Delete a key:value pair."""
+@click.argument('keys', nargs=-1)
+def delete(keys):
+    """Deletes key:value pairs."""
     try:
-        del items[key]
+        for key in keys:
+            del items[key]
+            click.echo(f'Deleted key "{key}".')
         save_items()
-        click.echo(f'Deleted key "{key}".')
     except KeyError:
         raise KeyError(f'Key "{key}" not found.')
 

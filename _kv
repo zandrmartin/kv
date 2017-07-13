@@ -9,8 +9,7 @@ case $state in
         _describe 'arguments' cmds
         ;;
     (arg)
-        local cmd="${words[1]}"
-        local -a opts=("${(@f)$(~/src/kv/venv/bin/python ~/src/kv/completion.py list_keys $cmd)}")
+        local -a opts=("${(@f)$(~/src/kv/venv/bin/python ~/src/kv/completion.py complete $words)}")
         if [[ $opts != "" ]]; then
             _describe 'keys' opts
         fi

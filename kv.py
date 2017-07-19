@@ -60,14 +60,22 @@ def cli():
 @cli.command()
 @click.argument('key')
 @click.argument('value')
-def add(key, value):
-    """Add a new key:value pair."""
+def set(key, value):
+    """Set a value for a key."""
     if key in pairs:
-        raise KeyError(f'Key "{key}" already exists.')
+        prev = pairs[key]
+
+        try:
+            msg = 'Key "{k}" already exists with value "{v}". Overwrite?'
+            if not click.confirm(msg.format(k=key, v=prev)):
+                raise Exception(f'Key "{key}" not changed.')
+        except click.exceptions.Abort:
+            click.echo('')
+            raise Exception(f'Key "{key}" not changed.')
 
     pairs[key] = value
-    click.echo(f'Added key "{key}" with value "{value}".')
     pairs.save()
+    click.echo(f'Key "{key}" set to value "{value}".')
 
 
 @cli.command()
@@ -94,20 +102,6 @@ def delete(keys):
 
 
 @cli.command()
-@click.argument('key')
-@click.argument('value')
-def change(key, value):
-    """Change the value of an existing key."""
-    if key not in pairs:
-        raise KeyError(f'Key "{key}" not found.')
-
-    prev = pairs[key]
-    pairs[key] = value
-    click.echo(f'Changed value of key "{key}" from "{prev}" to "{value}".')
-    pairs.save()
-
-
-@cli.command()
 def list():
     """List all key:value pairs."""
     if len(pairs) == 0:
@@ -122,4 +116,4 @@ if __name__ == '__main__':
     try:
         cli()
     except Exception as e:
-        click.echo(e)
+        click.echo(str(e))

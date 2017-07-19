@@ -17,7 +17,7 @@ def list_commands():
 @click.argument('cmd')
 @click.argument('args', nargs=-1)
 def complete(cmd, args):
-    cmds = [k for k in kv.cli.commands.keys() if k not in ('add', 'list')]
+    cmds = [k for k in kv.cli.commands.keys() if k not in ('set', 'list')]
 
     if cmd not in cmds:
         return

@@ -6,7 +6,7 @@ _arguments -C \
 case $state in
     (command)
         local -a cmds=("${(@f)$(~/src/kv/venv/bin/python ~/src/kv/completion.py list_commands)}")
-        _describe 'arguments' cmds
+        _describe 'commands' cmds
         ;;
     (arg)
         local -a opts=("${(@f)$(~/src/kv/venv/bin/python ~/src/kv/completion.py complete $words)}")

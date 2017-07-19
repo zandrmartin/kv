@@ -17,11 +17,17 @@ def list_commands():
 @click.argument('cmd')
 @click.argument('args', nargs=-1)
 def complete(cmd, args):
-    if cmd in ['add', 'list'] or (cmd != 'delete' and len(args) == 1):
+    cmds = [k for k in kv.cli.commands.keys() if k not in ('add', 'list')]
+
+    if cmd not in cmds:
         return
-    else:
-        kv.load_items()
-        for k, v in sorted(kv.items.items(), key=lambda x: x[0]):
+
+    if cmd != 'delete' and len(args) == 1:
+        return
+
+    kv.pairs.load()
+    for k, v in sorted(kv.pairs.items(), key=lambda x: x[0]):
+        if k not in args:
             click.echo(f'{k}:{v}')
 
 

@@ -3,38 +3,58 @@ import json
 import os
 
 
-items = {}
+class PairsCollection:
+    def __init__(self):
+        self.pairs = {}
+
+    def __len__(self):
+        return len(self.pairs)
+
+    def __getitem__(self, key):
+        return self.pairs[key]
+
+    def __setitem__(self, key, value):
+        self.pairs[key] = value
+
+    def __delitem__(self, key):
+        del self.pairs[key]
+
+    def __iter__(self):
+        return iter(self.pairs)
+
+    def items(self):
+        return iter(self.pairs.items())
+
+    @property
+    def file_path(self):
+        if not hasattr(self, '_file_path'):
+            dir = os.getenv('XDG_DATA_HOME')
+            if dir is not None:
+                self._file_path = os.path.join(dir, 'kv.json')
+            else:
+                home = os.getenv('HOME')
+                self._file_path = os.path.join(home, '.kv.json')
+
+        return self._file_path
+
+    def load(self):
+        try:
+            with open(self.file_path) as f:
+                self.pairs = json.load(f)
+        except FileNotFoundError:
+            pass
+
+    def save(self):
+        with open(self.file_path, 'w') as f:
+            json.dump(self.pairs, f)
 
 
-def get_file_path():
-    dir = os.getenv('XDG_DATA_HOME')
-    if dir is not None:
-        file = os.path.join(dir, 'kv.json')
-    else:
-        home = os.getenv('HOME')
-        file = os.path.join(home, '.kv.json')
-
-    return file
-
-
-def load_items():
-    global items
-    try:
-        with open(get_file_path()) as f:
-            items = json.load(f)
-    except FileNotFoundError:
-        pass
-
-
-def save_items():
-    global items
-    with open(get_file_path(), 'w') as f:
-        json.dump(items, f)
+pairs = PairsCollection()
 
 
 @click.group()
 def cli():
-    load_items()
+    pairs.load()
 
 
 @cli.command()
@@ -42,12 +62,12 @@ def cli():
 @click.argument('value')
 def add(key, value):
     """Add a new key:value pair."""
-    if key in items:
+    if key in pairs:
         raise KeyError(f'Key "{key}" already exists.')
 
-    items[key] = value
+    pairs[key] = value
     click.echo(f'Added key "{key}" with value "{value}".')
-    save_items()
+    pairs.save()
 
 
 @cli.command()
@@ -55,7 +75,7 @@ def add(key, value):
 def get(key):
     """Get the value for a given key."""
     try:
-        click.echo(items[key])
+        click.echo(pairs[key])
     except KeyError:
         raise KeyError(f'Key "{key}" not found.')
 
@@ -66,9 +86,9 @@ def delete(keys):
     """Deletes key:value pairs."""
     try:
         for key in keys:
-            del items[key]
+            del pairs[key]
             click.echo(f'Deleted key "{key}".')
-        save_items()
+        pairs.save()
     except KeyError:
         raise KeyError(f'Key "{key}" not found.')
 
@@ -78,23 +98,23 @@ def delete(keys):
 @click.argument('value')
 def change(key, value):
     """Change the value of an existing key."""
-    if key not in items:
+    if key not in pairs:
         raise KeyError(f'Key "{key}" not found.')
 
-    prev = items[key]
-    items[key] = value
+    prev = pairs[key]
+    pairs[key] = value
     click.echo(f'Changed value of key "{key}" from "{prev}" to "{value}".')
-    save_items()
+    pairs.save()
 
 
 @cli.command()
 def list():
     """List all key:value pairs."""
-    if len(items) == 0:
-        click.echo('No items found.')
+    if len(pairs) == 0:
+        click.echo('No keys found.')
         return
 
-    for k, v in sorted(items.items(), key=lambda x: x[0]):
+    for k, v in sorted(pairs.items(), key=lambda x: x[0]):
         click.echo(f'{k} -> {v}')
 
 

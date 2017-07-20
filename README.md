@@ -13,14 +13,13 @@ A simple CLI key:value store.
     Usage: kv.py [OPTIONS] COMMAND [ARGS]...
 
     Options:
-    --help  Show this message and exit.
+      --help  Show this message and exit.
 
     Commands:
-    add     Add a new key:value pair.
-    change  Change the value of an existing key.
-    delete  Delete a key:value pair.
-    get     Get the value for a given key.
-    list    List all key:value pairs.
+      delete  Deletes key:value pairs.
+      get     Get the value for a given key.
+      list    List all key:value pairs.
+      set     Set a value for a key.
 
 
 ## License
